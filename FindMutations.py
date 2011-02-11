@@ -33,11 +33,35 @@ wildtype=alignRecords[0]
 # Local Database Neuraminidase
 #########################
 from BioSQL import BioSeqDatabase
-server = BioSeqDatabase.open_database(driver="MySQLdb", user="root",
-                     passwd = "rootpass", host = "localhost", db="bioseqdb")
+server = BioSeqDatabase.open_database(driver="MySQLdb", user="root", passwd = "rootpass", host = "localhost", db="bioseqdb")
 db = server["neuraminidase"]
 
+#########################
+# Google country name
+#########################
+import string
+from geopy import geocoders
+""" Get the country name from the genbank description field for the sequence
 
+args:
+     description: record.description field in genbank format
+return:
+        countryLocation: string name for the country in a uniform format, based on google API.
+"""
+def getCountry_fromGBDescription(description)
+   # separete the fields by '/' to get the ubication
+   recordGeoLocation=string.split(description,'/')[1] # A/Mexico City/s
+   # localhost key for the google api
+   g=geocoders.Google('ABQIAAAAjB-oGyPYZ_fAg6eMOY4uoxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRM-xD84KmxCLors0B9Ii1PetMJwQ')
+   # place in google api format, latitude and longitud
+   place, (lat,lng)=g.geocode(recordGeoLocation)
+   print place
+   # last field is the country so splited and then get the last one
+   splitedLocation=string.split(place,',')
+   print splitedLocation
+   # get the last one
+   countryLocation=splitedLocation[len(splitedLocation)-1]
+   return countryLocation
 
 #########################
 # getMutations
@@ -55,7 +79,7 @@ for i in range(len(alignRecords)):
    if False:
       try:
          handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
-         db.load(SeqIO.parse(handle, "gb"))
+         db.load(SeqIO.parse(handle, "genbank"))
          server.commit() #On Biopython 1.49 or older, server.adaptor.commit()
          sleep(3) # wait for 3 seconds
          print ''+str(i)+'The accession number '+accessionNumber+'has been inserted'
@@ -69,8 +93,8 @@ for i in range(len(alignRecords)):
       # record the Accession Number, the mutation and country
          mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j]))
          seq_record=db.lookup(accession=alignRecords[i].id)
-         print alignRecords[i].description
-         print seq_record.description
+         alignRecords[i].description=seq_record.description
+         getCountry_fromGBDescription(alignRecords[i].description)
          
          
 
