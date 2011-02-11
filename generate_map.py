@@ -4,45 +4,22 @@ Generate map for mutations in neuraminidase (H1N1) sequences.
 @email: alfaceor@gmail.com
 """
 
-
-
 import domain_data
 import sys
 import os
+import Mutation
 # lee el archivo de input solo el basename
 alignBasename = sys.argv[1].split(".")[0].split("/")[-1]
 if alignBasename=="":
     quit()
-"""
-#########################
-# Run a clustalw
-#########################
-# FIXME: Why cannot use the package Bio.Align.Applications command not run
-#from Bio.Align.Applications import ClustalwCommandline
-#commandString = ClustalwCommandline(infile=alignBasename+".fasta")
-commandString = "mpirun -n 7 /home/alfaceor/instaladores/clustalw-mpi-0.13/clustalw-mpi -OUTORDER=INPUT -infile="+alignBasename+".fasta"
-# FIXME: This is a temporal solution for the fail with Bio.Align.Applications package.
-# Reference: http://www.ibm.com/developerworks/aix/library/au-python/
-import commands
-import time
-try:
-    #run a 'clustalw' command and assign results to a variable
-    #commandString = cline
-    ticks = time.time()
-    commandOutput = commands.getoutput(commandString)
-    tocks = time.time()
-#    print commandOutput
-    
-except:
-    print "Clustalw can not run, maybe you must install first"
-"""
 
 #########################
 # Read the aligment files 
 #########################
 from Bio import SeqIO
 
-handle = open(alignBasename+".aln","rU")
+#handle = open(alignBasename+".aln","rU")
+handle = open(sys.argv[1],"rU")
 alignRecords = list(SeqIO.parse(handle,"clustal"))
 handle.close()
 print "clustalw time"
@@ -75,14 +52,21 @@ outputfile_2d_structure.write(head+'\n')
 for i in range(len(wildtype.seq)):
     head=head+csv_token+str(i+1)
 
+outputfile_3d_structure.write(head+'\n')
+
+
 # region list for the 29 region (active site and others).
 numRegion_AS=29
 mutRegion_AS=[[] for i in range(numRegion_AS)]
 numRegion_2D=61
 mutRegion_2D=[[] for i in range(numRegion_2D)]
 
+# Regions for Secondary Structure
+regions_SS=[81,95,103,104,109,113,118,120,125,127,136,137,140,155,161,172,178,179,186,188,198,200,209,210,218,231,234,236,244,251,259,261,269,279,284,286,292,300,307,310,317,350,353,355,361,367,377,387,393,397,400,401,408,409,413,418,430,436,448,469]
 
-outputfile_3d_structure.write(head+'\n')
+# Regions for Active Site
+regions_AS=[82,117,118,119,150,151,152,155,156,176,177,222,223,224,225,227,228,276,277,278,292,293,294,295,367,368,401,402]
+
 
 # print csv file with the sequences
 for i in range(len(alignRecords)):
@@ -91,6 +75,7 @@ for i in range(len(alignRecords)):
     for j in range(len(wildtype.seq)):
         # if a mutation appears then show that
         if wildtype.seq[j] != alignRecords[i].seq[j]:
+			# record the Accession Number, the mutation and country
             j3d=domain_data.notation_3D(j)
             notation3d = str(wildtype.seq[j])+j3d+str(alignRecords[i].seq[j]) # notation for 3D structure.
             # check what ist the region in the sequence by active site.
