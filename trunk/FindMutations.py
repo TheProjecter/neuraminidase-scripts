@@ -50,15 +50,16 @@ for i in range(len(alignRecords)):
    mut=""
    mut3d=""
    # TODO: make a module for this process
-   # Insert sequence in database.
-   try:
-      handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
-      db.load(SeqIO.parse(handle, "gb"))
-      server.commit() #On Biopython 1.49 or older, server.adaptor.commit()
-      sleep(3) # wait for 3 seconds
-      print ''+str(i)+'The accession number '+accessionNumber+'has been inserted'
-   except Exception:
-      #print 'Error can\'t insert in database - '+str(i)+' - '+str(alignRecords[i].id)
+   # Insert sequence in database to actualice database.
+   if False:
+      try:
+         handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
+         db.load(SeqIO.parse(handle, "gb"))
+         server.commit() #On Biopython 1.49 or older, server.adaptor.commit()
+         sleep(3) # wait for 3 seconds
+         print ''+str(i)+'The accession number '+accessionNumber+'has been inserted'
+      except Exception:
+         print 'Error can\'t insert in database - '+str(i)+' - '+str(alignRecords[i].id)
    
    # Search in the sequence for mutations
    for j in range(len(wildtype.seq)):
