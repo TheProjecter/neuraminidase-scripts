@@ -46,6 +46,7 @@ from time import sleep
 from Bio import Entrez
 
 mutations_list=[]
+print len(alignRecords)
 for i in range(len(alignRecords)):
    mut=""
    mut3d=""
