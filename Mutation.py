@@ -7,4 +7,4 @@ class Mutation:
       self.new_aa=new_aa
       self.country=country
    def __repr__(self):
-      return repr((self, wildtype_AN, secuence_AN, old_aa, position_1D, new_aa,country))
+      return repr((self.wildtype_AN, self.secuence_AN, self.old_aa, self.position_1D, self.new_aa, self.country))
