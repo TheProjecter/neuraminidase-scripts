@@ -7,7 +7,7 @@ import Mutation
 # lee el archivo de input solo el basename
 alignBasename = sys.argv[1].split(".")[0].split("/")[-1]
 if alignBasename=="":
-    quit()
+   quit()
 
 #########################
 # Read the aligment files 
@@ -49,20 +49,20 @@ return:
         countryLocation: string name for the country in a uniform format, based on google API.
 """
 
-def getCountry_fromGBDescription(description)
+def getCountry_fromGBDescription(description):
    # separete the fields by '/' to get the ubication
    recordGeoLocation=string.split(description,'/')[1] # A/Mexico City/s
    # localhost key for the google api
    g=geocoders.Google('ABQIAAAAjB-oGyPYZ_fAg6eMOY4uoxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRM-xD84KmxCLors0B9Ii1PetMJwQ')
    # place in google api format, latitude and longitud
    place, (lat,lng)=g.geocode(recordGeoLocation)
-   print place
+   #print place
    # last field is the country so splited and then get the last one
    splitedLocation=string.split(place,',')
-   print splitedLocation
+   #print splitedLocation
    # get the last one
    countryLocation=splitedLocation[len(splitedLocation)-1]
-   return countryLocation
+   return countryLocation.strip()
 
 #########################
 # getMutations
@@ -72,7 +72,8 @@ from Bio import Entrez
 
 mutations_list=[]
 print len(alignRecords)
-for i in range(len(alignRecords)):
+#for i in range(len(alignRecords)):
+for i in range(10):
    mut=""
    mut3d=""
    # TODO: make a module for this process
@@ -92,15 +93,12 @@ for i in range(len(alignRecords)):
       # if a mutation appears then show that
       seq_record=db.lookup(accession=alignRecords[i].id)
       alignRecords[i].description=seq_record.description
-      
       if (wildtype.seq[j] != alignRecords[i].seq[j]) and (alignRecords[i].seq[j]!='-'):
-      # record the Accession Number, the mutation and country
+         # record the Accession Number, the mutation and country
+         country=getCountry_fromGBDescription(alignRecords[i].description)
+         print str(i)+' '+alignRecords[i].id+' '+country
          mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j],getCountry_fromGBDescription(alignRecords[i].description)))
          
-         
-         
-         
-
-
+print mutations_list[1:5]
 
 
