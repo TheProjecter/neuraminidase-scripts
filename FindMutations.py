@@ -48,6 +48,7 @@ args:
 return:
         countryLocation: string name for the country in a uniform format, based on google API.
 """
+
 def getCountry_fromGBDescription(description)
    # separete the fields by '/' to get the ubication
    recordGeoLocation=string.split(description,'/')[1] # A/Mexico City/s
@@ -89,12 +90,14 @@ for i in range(len(alignRecords)):
    # Search in the sequence for mutations
    for j in range(len(wildtype.seq)):
       # if a mutation appears then show that
+      seq_record=db.lookup(accession=alignRecords[i].id)
+      alignRecords[i].description=seq_record.description
+      
       if (wildtype.seq[j] != alignRecords[i].seq[j]) and (alignRecords[i].seq[j]!='-'):
       # record the Accession Number, the mutation and country
-         mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j]))
-         seq_record=db.lookup(accession=alignRecords[i].id)
-         alignRecords[i].description=seq_record.description
-         getCountry_fromGBDescription(alignRecords[i].description)
+         mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j],getCountry_fromGBDescription(alignRecords[i].description)))
+         
+         
          
          
 
