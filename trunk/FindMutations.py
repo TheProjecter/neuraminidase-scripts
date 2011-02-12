@@ -65,15 +65,29 @@ def getCountry_fromGBDescription(description):
    return countryLocation.strip()
 
 #########################
+# Regions SS and AS
+#########################
+
+# Regions for Secondary Structure
+regions_SS=[81,95,103,104,109,113,118,120,125,127,136,137,140,155,161,172,178,179,186,188,198,200,209,210,218,231,234,236,244,251,259,261,269,279,284,286,292,300,307,310,317,350,353,355,361,367,377,387,393,397,400,401,408,409,413,418,430,436,448,469]
+# Regions for Active Site
+regions_AS=[82,117,118,119,150,151,152,155,156,176,177,222,223,224,225,227,228,276,277,278,292,293,294,295,367,368,401,402]
+
+
+#########################
 # getMutations
 #########################
 from time import sleep
 from Bio import Entrez
+import domain_data
+import csv
+dataWriter = csv.writer(open('mutationData.csv', 'wb'), delimiter=',')
+dataWriter.writerow(["Accession Number","old_aa","position3D","new_aa","Country","Secondary Structure","Active Site"])
 
 mutations_list=[]
 print len(alignRecords)
 #for i in range(len(alignRecords)):
-for i in range(10):
+for i in range(3):
    mut=""
    mut3d=""
    # TODO: make a module for this process
@@ -96,9 +110,14 @@ for i in range(10):
       if (wildtype.seq[j] != alignRecords[i].seq[j]) and (alignRecords[i].seq[j]!='-'):
          # record the Accession Number, the mutation and country
          country=getCountry_fromGBDescription(alignRecords[i].description)
-         print str(i)+' '+alignRecords[i].id+' '+country
          mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j],getCountry_fromGBDescription(alignRecords[i].description)))
+         # write data in csv file in 3D NOTATION
+         mut_act_pos=len(mutations_list)-1
+         # Define regions for SS and AS
+         ss_reg=domain_data.whatRegion(mutations_list[mut_act_pos].position_1D,regions_SS)
+         as_reg=domain_data.whatRegion(mutations_list[mut_act_pos].position_1D,regions_AS)
+         csvrow=[mutations_list[mut_act_pos].sequence_AN,mutations_list[mut_act_pos].old_aa,domain_data.notation_3D(mutations_list[mut_act_pos].position_1D),mutations_list[mut_act_pos].new_aa,str(mutations_list[mut_act_pos].country),ss_reg,as_reg]
+         dataWriter.writerow(csvrow)
          
-print mutations_list[1:5]
 
 
