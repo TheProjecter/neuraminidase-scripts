@@ -119,5 +119,13 @@ for i in range(3):
          csvrow=[mutations_list[mut_act_pos].sequence_AN,mutations_list[mut_act_pos].old_aa,domain_data.notation_3D(mutations_list[mut_act_pos].position_1D),mutations_list[mut_act_pos].new_aa,str(mutations_list[mut_act_pos].country),ss_reg,as_reg]
          dataWriter.writerow(csvrow)
          
+# put country_list for accession number mutation
+country_list={}
+for m in mutations_list:
+   # check if country in list
+   if m.country not in country_list:
+      country_list.update({m.country:1})
+   else:
+      country_list[m.country]=country_list[m.country]+1
 
 
