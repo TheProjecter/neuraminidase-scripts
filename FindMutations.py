@@ -1,4 +1,4 @@
-#import domain_data
+import domain_data
 import sys
 import os
 import Mutation
@@ -121,11 +121,26 @@ for i in range(3):
          
 # put country_list for accession number mutation
 country_list={}
+country_csv_files={}
 for m in mutations_list:
    # check if country in list
    if m.country not in country_list:
       country_list.update({m.country:1})
+      # Create csv for file
+      country_csv_files.update({m.country:csv.writer(open('mutation_'+m.country+'.csv', 'wb'), delimiter=',')})
+      ss_reg=domain_data.whatRegion(m.position_1D,regions_SS)
+      as_reg=domain_data.whatRegion(m.position_1D,regions_AS)
+      country_csv_files[m.country].writerow(["Accession Number","mutation3D","ss_region","as_region"])
+      csvrow=[m.sequence_AN,m.old_aa+domain_data.notation_3D(m.position_1D)+m.new_aa,ss_reg,as_reg]
+      country_csv_files[m.country].writerow(csvrow)
    else:
       country_list[m.country]=country_list[m.country]+1
+      ss_reg=domain_data.whatRegion(m.position_1D,regions_SS)
+      as_reg=domain_data.whatRegion(m.position_1D,regions_AS)
+      csvrow=[m.sequence_AN,m.old_aa+domain_data.notation_3D(m.position_1D)+m.new_aa,ss_reg,as_reg]
+      country_csv_files[m.country].writerow(csvrow)
+  
 
+# Open csv with the 
 
+print country_list
