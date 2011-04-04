@@ -33,7 +33,7 @@ wildtype=alignRecords[0]
 # Local Database Neuraminidase
 #########################
 from BioSQL import BioSeqDatabase
-server = BioSeqDatabase.open_database(driver="MySQLdb", user="root", passwd = "rootpass", host = "localhost", db="bioseqdb")
+server = BioSeqDatabase.open_database(driver="MySQLdb", user="root", passwd = "123456", host = "localhost", db="bioseqdb")
 db = server["neuraminidase"]
 
 #########################
@@ -86,8 +86,8 @@ dataWriter.writerow(["Accession Number","old_aa","position3D","new_aa","Country"
 
 mutations_list=[]
 print len(alignRecords)
-#for i in range(len(alignRecords)):
-for i in range(3):
+for i in range(len(alignRecords)):
+#for i in range(3):
    mut=""
    mut3d=""
    # TODO: make a module for this process
@@ -97,7 +97,7 @@ for i in range(3):
          handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
          db.load(SeqIO.parse(handle, "genbank"))
          server.commit() #On Biopython 1.49 or older, server.adaptor.commit()
-         sleep(3) # wait for 3 seconds
+         sleep(1) # wait for 1 seconds
          print ''+str(i)+'The accession number '+accessionNumber+'has been inserted'
       except Exception:
          print 'Error can\'t insert in database - '+str(i)+' - '+str(alignRecords[i].id)
