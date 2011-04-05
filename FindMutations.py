@@ -79,6 +79,7 @@ regions_AS=[82,117,118,119,150,151,152,155,156,176,177,222,223,224,225,227,228,2
 #########################
 from time import sleep
 from Bio import Entrez
+Entrez.email = "alfaceor@hotmail.com"
 import domain_data
 import csv
 dataWriter = csv.writer(open('mutationData.csv', 'wb'), delimiter=',')
@@ -92,7 +93,7 @@ for i in range(len(alignRecords)):
    mut3d=""
    # TODO: make a module for this process
    # Insert sequence in database to actualice database.
-   if False:
+   if True:
       try:
          handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
          db.load(SeqIO.parse(handle, "genbank"))
@@ -109,6 +110,7 @@ for i in range(len(alignRecords)):
       alignRecords[i].description=seq_record.description
       if (wildtype.seq[j] != alignRecords[i].seq[j]) and (alignRecords[i].seq[j]!='-'):
          # record the Accession Number, the mutation and country
+         sleep(1)
          country=getCountry_fromGBDescription(alignRecords[i].description)
          mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j],getCountry_fromGBDescription(alignRecords[i].description)))
          # write data in csv file in 3D NOTATION

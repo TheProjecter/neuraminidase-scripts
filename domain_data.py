@@ -237,5 +237,5 @@ def whatRegion(value,regions_limits):
     for i in range(len(regions_limits)):
         if(value<=regions_limits[i]):
             return i    
-    return len(secuences)
+    return len(regions_limits)
 # END FUNCTIONS ###########
