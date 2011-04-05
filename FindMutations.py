@@ -54,15 +54,20 @@ def getCountry_fromGBDescription(description):
    recordGeoLocation=string.split(description,'/')[1] # A/Mexico City/s
    # localhost key for the google api
    g=geocoders.Google('ABQIAAAAjB-oGyPYZ_fAg6eMOY4uoxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRM-xD84KmxCLors0B9Ii1PetMJwQ')
-   # place in google api format, latitude and longitud
-   place, (lat,lng)=g.geocode(recordGeoLocation)
-   #print place
-   # last field is the country so splited and then get the last one
-   splitedLocation=string.split(place,',')
-   #print splitedLocation
-   # get the last one
-   countryLocation=splitedLocation[len(splitedLocation)-1]
-   return countryLocation.strip()
+   
+   sleep(0.2)
+   try:
+      # place in google api format, latitude and longitud
+      place, (lat,lng)=g.geocode(recordGeoLocation)
+      #print place
+      # last field is the country so splited and then get the last one
+      splitedLocation=string.split(place,',')
+      #print splitedLocation
+      # get the last one
+      countryLocation=splitedLocation[len(splitedLocation)-1]
+      return countryLocation.strip()
+   except Exception:
+      return "countrynotfound"
 
 #########################
 # Regions SS and AS
@@ -119,6 +124,7 @@ for i in range(len(alignRecords)):
          ss_reg=domain_data.whatRegion(mutations_list[mut_act_pos].position_1D,regions_SS)
          as_reg=domain_data.whatRegion(mutations_list[mut_act_pos].position_1D,regions_AS)
          csvrow=[mutations_list[mut_act_pos].sequence_AN,mutations_list[mut_act_pos].old_aa,domain_data.notation_3D(mutations_list[mut_act_pos].position_1D),mutations_list[mut_act_pos].new_aa,str(mutations_list[mut_act_pos].country),ss_reg,as_reg]
+	 #print csvrow
          dataWriter.writerow(csvrow)
          
 # put country_list for accession number mutation
@@ -146,3 +152,5 @@ for m in mutations_list:
 # Open csv with the 
 
 print country_list
+
+
