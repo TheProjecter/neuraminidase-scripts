@@ -105,7 +105,7 @@ for i in range(len(alignRecords)):
          handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
          db.load(SeqIO.parse(handle, "genbank"))
          server.commit() #On Biopython 1.49 or older, server.adaptor.commit()
-         print ''+str(i)+'The accession number '+accessionNumber+'has been inserted'
+         print ''+str(i)+'The accession number '+alingRecords[i].id+'has been inserted'
    
    # Search in the sequence for mutations
    for j in range(len(wildtype.seq)):
