@@ -104,6 +104,7 @@ for i in range(total_alignRecords):
    if True:
       try:
          seq_record=db.lookup(accession=alignRecords[i].id)
+         print alignRecords[i].id
       except Exception:
          handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
          db.load(SeqIO.parse(handle, "genbank"))
@@ -115,11 +116,13 @@ for i in range(total_alignRecords):
       # if a mutation appears then show that
       seq_record=db.lookup(accession=alignRecords[i].id)
       alignRecords[i].description=seq_record.description
+      # if a mutation exist and is not an insertion or deletion
       if (wildtype.seq[j] != alignRecords[i].seq[j]) and (alignRecords[i].seq[j]!='-'):
          # record the Accession Number, the mutation and country
          sleep(1)
          country=getCountry_fromGBDescription(alignRecords[i].description)
-         mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j],getCountry_fromGBDescription(alignRecords[i].description)))
+         # add the found mutation to the mutation_list
+         mutations_list.append(Mutation.Mutation(wildtype.id,alignRecords[i].id,wildtype.seq[j],j,alignRecords[i].seq[j],country))
          # write data in csv file in 3D NOTATION
          mut_act_pos=len(mutations_list)-1
          # Define regions for SS and AS
@@ -134,7 +137,9 @@ for i in range(total_alignRecords):
 pbar.finish()
 sys.stdout.write('\n')
    
-         
+print 20*'-'         
+print 'Creating country files ...'
+
 # put country_list for accession number mutation
 country_list={}
 country_csv_files={}
@@ -156,9 +161,9 @@ for m in mutations_list:
       csvrow=[m.sequence_AN,m.old_aa+domain_data.notation_3D(m.position_1D)+m.new_aa,ss_reg,as_reg]
       country_csv_files[m.country].writerow(csvrow)
   
+print 'Country files done! '
+# FIXME: close opened files.
 
 # Open csv with the 
 
 print country_list
-
-

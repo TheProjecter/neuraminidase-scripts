@@ -35,6 +35,22 @@ def notation_3D(j):
         new_notation = str(j+2)
     return new_notation
 
+""" Determinate the region of the value using a regions_limits tuple and the value to locate
+Args:
+    value: value to determine the region
+    regions_limits: tuple with the boundaries of the regions
+Returns:
+    An integer number with the ubication in the tuple or array??
+"""
+def whatRegion(value,regions_limits):
+    for i in range(len(regions_limits)):
+        if(value<=regions_limits[i]):
+            return i    
+    return len(regions_limits)
+
+
+
+### Deprecated ####
 # Notation function for active site a partir de la notacion_3D
 # TODO: definir notacion de sitio activo usar sets.
 def whatRegion_AS(x):
@@ -99,6 +115,8 @@ def whatRegion_AS(x):
 	    region = 28
 
     return region
+
+### Deprecated ####    
 # Secondary Structure region. i.e. alpha, beta, loop
 def whatRegion_2D(x):
     if x <= 81 :
@@ -225,17 +243,4 @@ def whatRegion_2D(x):
          region = 60
 
     return region
-
-""" Determinate the region of the value using a regions_limits tuple and the value to locate
-Args:
-    value: value to determine the region
-    regions_limits: tuple with the boundaries of the regions
-Returns:
-    An integer number with the ubication in the tuple or array??
-"""
-def whatRegion(value,regions_limits):
-    for i in range(len(regions_limits)):
-        if(value<=regions_limits[i]):
-            return i    
-    return len(regions_limits)
 # END FUNCTIONS ###########
