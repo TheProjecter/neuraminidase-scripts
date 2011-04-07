@@ -100,13 +100,12 @@ for i in range(len(alignRecords)):
    # Insert sequence in database to actualice database.
    if True:
       try:
+         seq_record=db.lookup(accession=alignRecords[i].id)
+      except Exception:
          handle = Entrez.efetch(db="protein", id=alignRecords[i].id, rettype="gb")
          db.load(SeqIO.parse(handle, "genbank"))
          server.commit() #On Biopython 1.49 or older, server.adaptor.commit()
-         sleep(1) # wait for 1 seconds
          print ''+str(i)+'The accession number '+accessionNumber+'has been inserted'
-      except Exception:
-         print 'Error can\'t insert in database - '+str(i)+' - '+str(alignRecords[i].id)
    
    # Search in the sequence for mutations
    for j in range(len(wildtype.seq)):
