@@ -91,8 +91,12 @@ dataWriter = csv.writer(open('mutationData.csv', 'wb'), delimiter=',')
 dataWriter.writerow(["Accession Number","old_aa","position3D","new_aa","Country","Secondary Structure","Active Site"])
 
 mutations_list=[]
-print len(alignRecords)
-for i in range(len(alignRecords)):
+from progressbar import SimpleProgress
+total_alignRecords=len(alignRecords)
+print total_alignRecords
+#begin progressbar
+pbar = ProgressBar(widgets=[SimpleProgress()], maxval=total_alignRecords).start()
+for i in range(total_alignRecords):
 #for i in range(3):
    mut=""
    mut3d=""
@@ -125,6 +129,12 @@ for i in range(len(alignRecords)):
          csvrow=[mutations_list[mut_act_pos].sequence_AN,mutations_list[mut_act_pos].old_aa,domain_data.notation_3D(mutations_list[mut_act_pos].position_1D),mutations_list[mut_act_pos].new_aa,str(mutations_list[mut_act_pos].country),ss_reg,as_reg]
 	 #print csvrow
          dataWriter.writerow(csvrow)
+   # increase progressbar
+   pbar.update(i+1)
+# finish progressbar
+pbar.finish()
+sys.stdout.write('\n')
+   
          
 # put country_list for accession number mutation
 country_list={}
