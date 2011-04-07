@@ -97,7 +97,6 @@ print total_alignRecords
 #begin progressbar
 pbar = ProgressBar(widgets=[SimpleProgress()], maxval=total_alignRecords).start()
 for i in range(total_alignRecords):
-#for i in range(3):
    mut=""
    mut3d=""
    # TODO: make a module for this process
